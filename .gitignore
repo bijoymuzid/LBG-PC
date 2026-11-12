@@ -1,0 +1,14 @@
+# Godot 4+ specific ignores
+.godot/
+
+# Local portable Godot engine binaries (>100MB)
+engine/
+
+# OS / Editor files
+.DS_Store
+Thumbs.db
+*.tmp
+*.bak
+.pi/
+AGENTS.md
+
