@@ -23,8 +23,25 @@ A standalone PC 3D Arena Battlegrounds fighting game built with **Godot 4.3 (Vul
     - `boulder_01.glb`, `arena_boulder.glb`, `rock_chunk_01.glb`, `rock_chunk_02.glb`
   - Built initial 120Hz showcase scene (`scenes/Main.tscn` + `scripts/Main.gd`) with ACES Tonemapping, HDR Glow/Bloom, SSR, SSAO, Volumetric Fog, and live 120 FPS / Frame-Time HUD.
 
-- [ ] **Step 2: Full Destructible Battlegrounds Arena, Lighting & Next-Gen Post-Processing**
-  - Build the full Battlegrounds Arena (destructible boundary walls, pillars, PBR boulders, dynamic lighting, impact frame post-processing shader, and third-person action camera with `Shift` lock-on & camera shake).
+- [x] **Step 2: Full Destructible Battlegrounds Arena, Lighting & Next-Gen Post-Processing** *(COMPLETED)*
+  - Built the full 52m x 52m Battlegrounds Arena (`scenes/BattlegroundsArena.tscn` + `scripts/BattlegroundsArena.gd` + `scripts/DestructibleWall.gd`) using 100% downloaded 3D GLB assets:
+    - 13x13 tiled stone/rock floor (`floor_tile_large.glb`, `floor_tile_large_rocks.glb`) with randomized tile rotation + static physics floor.
+    - 44 destructible perimeter wall segments with HP-based state machine swapping `wall.glb` -> `wall_cracked.glb` -> `wall_broken.glb`, camera/debris collision adjustment, and impact shake feedback.
+    - Flying `RigidBody3D` debris bursts using `rock_chunk_01.glb` / `rock_chunk_02.glb` on heavy wall impacts (LOD0-only rendering, random spin/scale/velocity, TTL cleanup).
+    - Decorated pillars (`pillar_decorated.glb`), rubble (`rubble_large.glb`), and 20 perimeter PBR boulders (`boulder_01.glb`, `arena_boulder.glb`) with physics colliders.
+    - Dynamic corner/gateway omni lighting (warm/cool rim contrast) + secondary anime rim DirectionalLight.
+  - Added Next-Gen Post-Processing & Anime Impact-Frame shader pipeline (`shaders/post_process_impact.gdshader` + `scripts/PostProcessController.gd`):
+    - Black-and-white inverted anime Impact Frames on heavy hits (style 0), KJ "20 Series" crimson-black flash (style 1), and Weapon God cyan-white flash (style 2).
+    - Radial anime speed-lines (double-frequency ray bursts) & dynamic chromatic aberration during dashes, wall-splats, and ultimates.
+    - Hitstop controller using unscaled-delta recovery (`Engine.time_scale` freeze frames).
+  - Implemented 120Hz Third-Person Battlegrounds Action Camera (`scripts/BattleCamera.gd`):
+    - Smooth mouse orbit (captured cursor toggle via Right-Click / ESC), `Shift` or Middle-Mouse target Lock-On with camera yaw/pitch auto-tracking.
+    - Dynamic FOV punch on dashes/impacts, 120Hz trauma-based camera shake + directional impact kicks.
+    - Wall & pillar raycast collision avoidance with smooth pull-in/out interpolation.
+  - Updated `scenes/Main.tscn` + `scripts/Main.gd` to integrate the arena, camera, post-FX, and Battle HUD:
+    - `[WASD]` move fighter, `[E]` smash nearest wall (shows full wall -> cracked -> broken + debris showcase), `[F]` anime impact frame + hitstop + shake, `[Q]` dash speed-lines + FOV punch + debris burst, `[R]` repair all walls.
+    - 2D projected lock-on reticle over locked target and live 120 FPS / frame-time / physics-tick HUD.
+  - Verified headlessly with `Godot_v4.3-stable_win64_console.exe --headless --script test_step2.gd`: zero errors, 44 walls spawned, state machine + debris + camera + post-processing all functional.
 
 - [ ] **Step 3: Core Battlegrounds Movement & 120Hz Physics Engine**
   - Implement `Q` Directional Dash (front dash punch, side-step, backflip), `F` Block & Perfect Parry, Active Ragdoll knockback, `Q` Ragdoll Evasive burst, Wall-splats, and physical ground crater rock debris.
